@@ -56,7 +56,7 @@ function f2min(f, c, x, w)
     if (sum((c - M * piM * c) .^ 2) < 1e-13)
         return (transpose(c) * piM * c)[1]
     else
-        return Inf
+        return 1e8
     end
 end
 
@@ -66,12 +66,21 @@ function find_design(f, c, l_x, h_x)
 
     low_border = vcat(ones(n) .* l_x , zeros(n))
     high_border = vcat(ones(n) .* h_x, ones(n))
-
+    counter = 0
     while true
         init_x = collect(range(l_x, stop = h_x, length=size(c, 1)))
         init_vec = vcat(rand(n) .* (h_x - l_x) .+ l_x, rand(n))
-        res = optimize((vec -> f2min(poly2, c, vec2design(vec)...)),
-            low_border, high_border, init_vec, Fminbox(NelderMead()))
+        if counter == 501
+            println("Seems like only BFGS not convergence. Try ParticleSwarm+BFGS")
+        end
+        if counter > 500
+            res = optimize((vec -> f2min(poly2, c, vec2design(vec)...)),
+                low_border, high_border, init_vec, Fminbox(ParticleSwarm()))
+        else
+            res = optimize((vec -> f2min(poly2, c, vec2design(vec)...)),
+                low_border, high_border, init_vec, Fminbox(BFGS()))
+        end
+
 
         found_x, found_w = vec2design(res.minimizer)
         found_x, found_w = reduce_design(found_x, found_w)
@@ -83,12 +92,12 @@ function find_design(f, c, l_x, h_x)
 
         err = check(f, c, found_x, found_w, l_x, h_x)
 
-        if err < 1e-3
+        if err < 1e-5
             println(err)
             return found_x, found_w, res.minimum
         end
         println("One more try err = ", err)
-
+        counter += 1
     end
 end
 
@@ -128,8 +137,8 @@ function poly2(x)
 end
 
 function cycle()
-    for z in range(0, 1, length=20)
+    for z in range(-1, 1, length=50)
         c = ForwardDiff.derivative.(poly2, z)
-        println("z = ", z, "    ", find_design(poly2,c, 0, 1))
+        println("z = ", z, "    ", find_design(poly2,c, -1, 1))
     end
 end
