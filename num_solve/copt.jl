@@ -133,12 +133,12 @@ end
 
 
 function poly2(x)
-    [x, x^2, x^3, x^4]
+    [x, x^2, x^3]
 end
 
 function cycle()
-    for z in range(-1, 1, length=50)
+    for z in range(0, 1, length=20)
         c = ForwardDiff.derivative.(poly2, z)
-        println("z = ", z, "    ", find_design(poly2,c, -1, 1))
+        println("z = ", z, "    ", find_design(poly2,c, 0, 1))
     end
 end
