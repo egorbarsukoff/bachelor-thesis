@@ -1,0 +1,245 @@
+\documentclass[unicode, notheorems, minimal, nologo]{beamer}
+% If you have more than three sections or more than three subsections in at least one section,
+% you might want to use the [compress] switch. In this case, only the current (sub-) section
+% is displayed in the header and not the full overview.
+\mode<presentation>
+{
+  \usetheme[numbers, totalnumbers]{Statmod}
+
+  \setbeamercovered{transparent}
+  \beamertemplatenavigationsymbolsempty
+  % or whatever (possibly just delete it)
+}
+
+%\usepackage{pscyr}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsthm}
+\usepackage{pdfpages}
+
+\usepackage{natbib}   % omit 'round' option if you prefer square brackets
+\bibliographystyle{plainnat}
+
+\graphicspath{{fig/}}
+
+%\usepackage{tikz}
+% you only need this when using TikZ graphics
+
+\newtheorem{theorem}{Теорема}
+\newtheorem{example}{Пример}
+\newtheorem{definition}{Определение}
+
+
+\DeclareMathOperator*{\E}{\mathrm{E}}
+\DeclareMathOperator*{\D}{\mathrm{D}}
+\DeclareMathOperator*{\sign}{sign}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\Int}{Int}
+\DeclareMathOperator*{\err}{err}
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+\newcommand\abs[1]{\left\lvert#1\right\rvert}
+
+
+\title[Оптимальные планы для оценивания производных]{ Оптимальные планы для оценивания производных в полиномиальной регрессионной модели без свободного члена}
+
+\author{Барсуков Егор Вячеславович, гр. 16-Б.04мм}
+\institute[СПбГУ]{
+    Санкт-Петербургский государственный университет \\
+    Математико-Механический факультет \\
+    Кафедра статистического моделирования \\
+    \vspace{0.4cm}
+    Научный руководитель: д.ф.-м.н., профессор В. Б. Мелас 
+    \vspace{0.3cm}
+}
+
+\date{
+	Санкт-Петербург \\
+    2020 г.
+}
+
+\subject{Beamer}
+% This is only inserted into the PDF information catalog. Can be left
+% out.
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+% \AtBeginSubsection[]
+% {
+%   \begin{frame}<beamer>
+%     \frametitle{Outline}
+%     \tableofcontents[currentsection,currentsubsection]
+%   \end{frame}
+% }
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+\begin{frame}
+	\frametitle{Уравнение регрессии}
+	\begin{equation*}
+		y_j = \theta^\top f_j(x_j) + \varepsilon_j, \quad j = 1 \ldots N, \, x_j \in \mathcal{X}
+	\end{equation*}
+	\begin{itemize}
+		\item $N$ --- количество экспериментов;
+		\item $f(x)$ --- вектор регрессионных функций;
+		\item $\theta = (\theta_1, \ldots, \theta_m)^\top$ --- неизвестные параметры;
+		\item $x_1, \ldots, x_N$ --- условия проведения эксперимента;
+		\item $\mathcal{X}$ --- множество планирования;
+		\item $\varepsilon_1, \ldots, \varepsilon_N$ --- случайные величины, характеризующие ошибки наблюдений.
+		\begin{itemize}
+			\item Несмещенные $\mathbb{E} \varepsilon_i = 0$
+			\item Некоррелированные $\mathbb{E} \varepsilon_i \varepsilon_j = 0$ для $i \neq j$
+			\item Равноточные $\mathbb{E} \varepsilon_i^2 = \sigma$ для всех $i$
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{План эксперимента и информационная матрица}
+	\begin{definition}
+	Точным планом эксперимента называется следующая дискретная вероятностная мера
+		\begin{equation*}
+			\xi = 
+				\begin{pmatrix}
+				x_1 & \ldots & x_m \\
+				\omega_1 & \ldots & \omega_m
+			\end{pmatrix}, \quad x_i \in \mathcal{X},
+		\end{equation*}
+	\end{definition}
+	 
+  	\begin{definition}
+		Для плана эксперимента определим его информационную матрицу
+		\begin{equation*}
+			M(\xi) = \int_{\mathcal{X}} f(x) f^\top(x) \xi (dt).
+  		\end{equation*}
+	\end{definition}
+  	
+
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{C-оптимальный план эксперимента}
+	\begin{definition}
+		C-оптимальным планом эксперимента для данного вектора $c$ называется план минимизирующий функцию $\Phi$
+		\begin{equation*}
+				\Phi(\xi) = \begin{cases}
+				c^\top M(\xi)^{-} c, \quad \text{если } \exists v \text{, такой, что } \; c = M(\xi) v\\
+				+\infty, \quad  \text{иначе}
+		    \end{cases},
+		\end{equation*}
+		где $M(\xi)^{-}$ --- псевдообратная матрица к информационной матрице плана
+	\end{definition}
+	
+	\begin{itemize}
+		\item C-оптимальный план минимизирует дисперсию МНК-оценки~$\theta^\top c$;
+		\item В общем виде задача нахождения таких планов не решена
+	\end{itemize}
+	
+  
+\end{frame}
+
+\begin{frame}
+	\frametitle{Постановка задачи}
+	\begin{definition}
+	Если $c = f'(z) = \left(f'_1(z), \ldots, f'_m(z) \right)^\top$ то соответствующий план называется планом для оценки производной в точке $z$.
+	\end{definition}
+	\begin{itemize}
+		\item Целью работы является описание оптимальных планов для оценки производной в модели $f(x) = \left(x, \ldots, x^m \right)$ при носителе $\mathcal{X} = [0, d]$.
+		\item Это имеет практический смысл, если существует априорное знание о значении функции в нулевой точке и эксперимент проводится на положительном отрезке.
+		\item Решение задачи отличается от того, которое получается при носителе, границе которого не принадлежит ноль, которое описано в \citep{melasmain}.
+		\item Разработать алгоритм численно решающий задачу нахождения $c$ оптимальных планов для произвольного $c$.
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Теорема Элвинга \citep{melas2010}}
+	\begin{theorem}
+	Допустимый план $\xi^\star$ с носителем $x_1, \ldots, x_m \in \mathcal{X}$ и весами $\omega_1, \ldots, \omega_m$ является $c$-оптимальным тогда и только тогда, когда существует $p \in \mathbb{R}^k$ и константа $h$ такие, что выполняются следующие условия:
+  \begin{subequations}
+  \label{eq:elfving}
+  \begin{align}
+	&\abs{p^\top f(x_i)} = 1 &&i=1..m \leqslant n \\
+	&\abs{p^\top f(x)} \leqslant 1  &&x \in \mathcal{X} \\
+	&c = h \sum_{i=1}^m \omega_i f(x_i) p^\top f(x_i) .
+  \end{align}
+  Кроме того
+  \begin{equation*}
+  	h^2 = c^\top M^{-}(\xi^{*})c
+  \end{equation*}
+  \end{subequations}
+	\end{theorem}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Веса у плана для оценки производной \citep{melasmain}}
+	Для набора точек $x_1^*, \ldots, x_k^*$ определим множество базисных многочленов
+	\begin{equation*}
+		L_i(z) = \frac{z \prod_{l \neq i} (z - x_l^*)}{x_i^* \prod_{l \neq i} (x_i^* - x_l^*)}, \, i = 1, \dots k
+	\end{equation*}
+	
+	\begin{theorem}
+		Оптимальный план для оценивания производной полиномиальной модели без свободного члена с опорными точками $x_1^*, \ldots, x_m^*$, где $m=n$ или $m=n-1$ имеет веса вычисленные по следующей формуле:	
+	\begin{equation*}
+		\omega_i = \frac{\abs{L'_i(z)}}{\sum_{j=1}^m \abs{L'_j(z)}},
+	\end{equation*}
+	\end{theorem}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Носитель плана}
+	С помощью теоремы Элвинга было доказано, что если оптимальный план для оценивания производной с носителем $[0, 1]$ состоит из $n$ точек, то носитель состоит из экстремальных точек следующего многочлена
+	\begin{equation*}
+		S_n(x) = T_n \left(x \left(1 + \cos \frac{\pi}{2n} \right) - \cos \frac{\pi}{2n} \right),
+	\end{equation*}
+	где $T_n$ --- многочлен Чебышёва первого рода степени $m$. Таким образом носитель плана находится в точках
+	\begin{equation*}
+		x_i^* = \frac{\cos \frac{(n - i) \pi}{n} + \cos \frac{\pi}{2n}}{1 + \cos \frac{\pi}{2n}} , \, \quad i = 1, \ldots, n
+	\end{equation*}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Корни производных базисных многочленов}
+	
+	\begin{itemize}
+		\item $\{L_i(z)\}_{i=1}^n$ --- базисные многочлены построенные по точкам~$x^*_1, \ldots, x^*_n$;
+		\item $u_1^i, \ldots, u_{n-1}^i$ --- корни производной $i$-го базисного многочлена, упорядоченные по возрастанию
+	\end{itemize}
+	Было доказано, что тогда корни производных базисных многочленов упорядочены следующим образом
+	\begin{equation*}
+		u^n_1 < u^{n-1}_1 < \ldots < u^1_1 < u^n_2 < u^{n-1}_2 < \ldots < u_{n-1}^1.
+	\end{equation*}
+	
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Оптимальный план на отрезке с началом в нуле для оценки производной}
+	
+	\begin{theorem}
+		План с носителем $\{x_i^*\}_{i=1}^n$ является оптимальным планом для оценивания производной полиномиальной модели без свободного члена в точке $z$ при $\mathcal{X} = [0, 1]$ тогда и только тогда, когда выполняется одно из следующих условий:
+		\begin{itemize}
+			\item $z \in (-\infty, u_1^n)$
+			\item $z \in (u_i^1, u_{i+1}^n), \, i = 1, \ldots, n-2$
+			\item $z \in (u_{n-1}^1, +\infty)$
+		\end{itemize}
+	\end{theorem}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Результаты}
+	Были описаны оптимальные планы размера $n$ для нахождения производной в полиномиальной модели без свободного члена с областью моделирования на  положительном отрезке и показано, в каких точках $z$ их не существует.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Список литературы}
+	\bibliography{diploma}
+
+\end{frame}
+	
+
+\end{document}
