@@ -17,6 +17,7 @@
 \usepackage[russian]{babel}
 \usepackage{amsthm}
 \usepackage{pdfpages}
+\usepackage{bibentry}
 
 \usepackage{natbib}   % omit 'round' option if you prefer square brackets
 \bibliographystyle{plainnat}
@@ -74,13 +75,14 @@
 
 \begin{document}
 
+
 \begin{frame}
     \titlepage
 \end{frame}
 \begin{frame}
 	\frametitle{Уравнение регрессии}
 	\begin{equation*}
-		y_j = \theta^\top f_j(x_j) + \varepsilon_j, \quad j = 1 \ldots N, \, x_j \in \mathcal{X}
+		y_j = \theta^\top f(x_j) + \varepsilon_j, \quad j = 1 \ldots N, \, x_j \in \mathcal{X}
 	\end{equation*}
 	\begin{itemize}
 		\item $N$ --- количество экспериментов;
@@ -92,7 +94,7 @@
 		\begin{itemize}
 			\item Несмещенные $\mathbb{E} \varepsilon_i = 0$
 			\item Некоррелированные $\mathbb{E} \varepsilon_i \varepsilon_j = 0$ для $i \neq j$
-			\item Равноточные $\mathbb{E} \varepsilon_i^2 = \sigma$ для всех $i$
+			\item Равноточные $\mathbb{E} \varepsilon_i^2 = \sigma^2$ для всех $i$
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -100,20 +102,20 @@
 \begin{frame}
 	\frametitle{План эксперимента и информационная матрица}
 	\begin{definition}
-	Точным планом эксперимента называется следующая дискретная вероятностная мера
+	Планом эксперимента называется следующая дискретная вероятностная мера
 		\begin{equation*}
 			\xi = 
 				\begin{pmatrix}
 				x_1 & \ldots & x_m \\
 				\omega_1 & \ldots & \omega_m
-			\end{pmatrix}, \quad x_i \in \mathcal{X},
+			\end{pmatrix}, \quad x_i \in \mathcal{X}.
 		\end{equation*}
 	\end{definition}
 	 
   	\begin{definition}
 		Для плана эксперимента определим его информационную матрицу
 		\begin{equation*}
-			M(\xi) = \int_{\mathcal{X}} f(x) f^\top(x) \xi (dt).
+			M(\xi) = \int_{\mathcal{X}} f(x) f^\top(x) \xi (dx).
   		\end{equation*}
 	\end{definition}
   	
@@ -151,7 +153,7 @@
 		\item Целью работы является описание оптимальных планов для оценки производной в модели $f(x) = \left(x, \ldots, x^m \right)$ при носителе $\mathcal{X} = [0, d]$.
 		\item Это имеет практический смысл, если существует априорное знание о значении функции в нулевой точке и эксперимент проводится на положительном отрезке.
 		\item Решение задачи отличается от того, которое получается при носителе, границе которого не принадлежит ноль, которое описано в \citep{melasmain}.
-		\item Разработать алгоритм численно решающий задачу нахождения $c$ оптимальных планов для произвольного $c$.
+		\item Разработать алгоритм численно решающий задачу нахождения c-оптимальных планов для произвольного $c$.
 	\end{itemize}
 	
 \end{frame}
@@ -163,13 +165,13 @@
   \begin{subequations}
   \label{eq:elfving}
   \begin{align}
-	&\abs{p^\top f(x_i)} = 1 &&i=1..m \leqslant n \\
-	&\abs{p^\top f(x)} \leqslant 1  &&x \in \mathcal{X} \\
+	&\abs{p^\top f(x_i)} = 1 &&i=1..m \leqslant n, \\
+	&\abs{p^\top f(x)} \leqslant 1  &&x \in \mathcal{X}, \\
 	&c = h \sum_{i=1}^m \omega_i f(x_i) p^\top f(x_i) .
   \end{align}
-  Кроме того
+  Кроме того,
   \begin{equation*}
-  	h^2 = c^\top M^{-}(\xi^{*})c
+  	h^2 = c^\top M^{-}(\xi^{*})c.
   \end{equation*}
   \end{subequations}
 	\end{theorem}
@@ -179,13 +181,13 @@
 	\frametitle{Веса у плана для оценки производной \citep{melasmain}}
 	Для набора точек $x_1^*, \ldots, x_k^*$ определим множество базисных многочленов
 	\begin{equation*}
-		L_i(z) = \frac{z \prod_{l \neq i} (z - x_l^*)}{x_i^* \prod_{l \neq i} (x_i^* - x_l^*)}, \, i = 1, \dots k
+		L_i(z) = \frac{z \prod_{l \neq i} (z - x_l^*)}{x_i^* \prod_{l \neq i} (x_i^* - x_l^*)}, \, i = 1, \dots k.
 	\end{equation*}
 	
 	\begin{theorem}
 		Оптимальный план для оценивания производной полиномиальной модели без свободного члена с опорными точками $x_1^*, \ldots, x_m^*$, где $m=n$ или $m=n-1$ имеет веса вычисленные по следующей формуле:	
 	\begin{equation*}
-		\omega_i = \frac{\abs{L'_i(z)}}{\sum_{j=1}^m \abs{L'_j(z)}},
+		\omega_i = \frac{\abs{L'_i(z)}}{\sum_{j=1}^m \abs{L'_j(z)}}.
 	\end{equation*}
 	\end{theorem}
 \end{frame}
@@ -198,7 +200,7 @@
 	\end{equation*}
 	где $T_n$ --- многочлен Чебышёва первого рода степени $m$. Таким образом носитель плана находится в точках
 	\begin{equation*}
-		x_i^* = \frac{\cos \frac{(n - i) \pi}{n} + \cos \frac{\pi}{2n}}{1 + \cos \frac{\pi}{2n}} , \, \quad i = 1, \ldots, n
+		x_i^* = \frac{\cos \frac{(n - i) \pi}{n} + \cos \frac{\pi}{2n}}{1 + \cos \frac{\pi}{2n}} , \, \quad i = 1, \ldots, n.
 	\end{equation*}
 \end{frame}
 
@@ -206,7 +208,7 @@
 	\frametitle{Корни производных базисных многочленов}
 	
 	\begin{itemize}
-		\item $\{L_i(z)\}_{i=1}^n$ --- базисные многочлены построенные по точкам~$x^*_1, \ldots, x^*_n$;
+		\item $\{L_i(z)\}_{i=1}^n$ --- базисные многочлены, построенные по точкам~$x^*_1, \ldots, x^*_n$
 		\item $u_1^i, \ldots, u_{n-1}^i$ --- корни производной $i$-го базисного многочлена, упорядоченные по возрастанию
 	\end{itemize}
 	Было доказано, что тогда корни производных базисных многочленов упорядочены следующим образом
@@ -231,15 +233,97 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Результаты}
-	Были описаны оптимальные планы размера $n$ для нахождения производной в полиномиальной модели без свободного члена с областью моделирования на  положительном отрезке и показано, в каких точках $z$ их не существует.
+	\frametitle{Пример $m = 3$}
+	С помощью этой теоремы найдем планы для оценки производной в случае $f(x) = (x, x^2, x^3)^\top$, $\mathcal{X} = [0, 1]$ и покажем их оптимальность. Опорные точки плана будут совпадать с экстремальными точками многочлена $S_3(x):$
+	\begin{equation*}
+		S_3(x) = 4 \left(\frac{\sqrt{3}}{2}+1\right)^3 x^3-6 \sqrt{3} \left(\frac{\sqrt{3}}{2}+1\right)^2 x^2+6 \left(\frac{\sqrt{3}}{2}+1\right) x,
+	\end{equation*}
+	Которыми являются
+	\begin{equation*}
+		x_1^* = 3 \sqrt{3} - 5, \quad x_2^* = \sqrt{3} - 1 , \quad x_3^* = 1.
+	\end{equation*}
+	
 \end{frame}
 
 \begin{frame}
-	\frametitle{Список литературы}
-	\bibliography{diploma}
-
+	\frametitle{Производные базисных многочленов ($m = 3$)}
+	\begin{figure}
+		\includegraphics[width=\textwidth]{fig/dl_color.pdf}
+		\caption{Производные базисных многочленов. Красным выделены промежутки, на которых выполняется теорема.}
+	\end{figure}
 \end{frame}
+
+\begin{frame}
+	\frametitle{Численное нахождение оптимальных планов}
+	\begin{itemize}
+		\item С-оптимальность плана определяется как решение задачи оптимизации
+		\item Теорема Элвинга дает критерий С-оптимальности
+		\item Поэтому численный алгоритм может быть устроен следующим образом:
+		\begin{enumerate}
+			\item Численно оптимизируем функцию $\Phi(\xi)$ из определения со случайным начальным планом
+			\item Проверяем выполнение условий теоремы Элвинга
+			\begin{itemize}
+				\item Если они выполнены --- у нас есть результат
+				\item Если нет --- возвращаемся к п. 1
+			\end{itemize}
+		\end{enumerate}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle {Оптимизация $\Phi(\xi)$}
+	\begin{itemize}
+		\item У любой матрицы $A^-(x)$ при условии постоянного ранга существует непрерывная вторая производная выражающаяся через производные $A(x)$
+		\item Так как $\Phi(\xi) = c^\top M^-(\xi) c$, а ранг $M(\xi)$ зависит только от количества опорных точек, то существуют вторые производные у $\Phi$ по опорным точкам и весам
+		\item Поэтому был использован квазиньютоновский алгоритм оптимизации с ограничениями L-BFGS-B 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Проверка условий теоремы Элвинга}
+	Нужно найти такой вектор $p$, что $\abs{p^\top f(x)} \leqslant 1$, при этом равенство достигается в опорных точках. Такие $p$ будут решением уравнения
+	\begin{equation*}
+		\begin{pmatrix}
+			f_1(x_1) & \dots & f_n(x_1) \\
+			f_1(x_2) & \dots & f_n(x_2) \\
+  			\vdots &   \ddots & \vdots \\
+  			f_1(x_n)  & \dots & f_n(x_n) \\
+  			f'_1(x_{i_1}) & \dots & f'_n(x_{i_1}) \\
+  			\vdots &   \ddots & \vdots \\
+  			f'_1(x_{i_m})  & \dots & f'_n(x_{i_m})
+		\end{pmatrix} 
+		p =
+		\begin{pmatrix}
+			1 \\ s_2 \\ \vdots \\ s_n \\ 0 \\ \vdots \\ 0
+		\end{pmatrix},
+	\end{equation*}
+	где $x_{i_j}$ --- опорные точки не на границе области планирования, а $s_i = \pm 1$.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Проверка условий теоремы Элвинга}
+	Для всех $p$ с нулевой невязкой для предыдущего уравнения и данного плана $\xi$, проверяем третье условие теоремы Элвинга:
+	\begin{equation*}
+		c = h \sum_{i=1}^m \omega_i f(x_i) p^\top f(x_i)
+	\end{equation*}
 	
+	\begin{itemize}
+		\item Для того, чтобы не вычислять $h$ достаточно проверять коллинеарность векторов
+		\item Все сравнения с точностью до машинного нуля
+		\item Если равенство выполняется, то $\xi$ --- с-оптимальный план
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Результаты}
+	\begin{itemize}
+		\item Описаны оптимальные планы размера $n$ для нахождения производной в полиномиальной модели без свободного члена с $\mathcal{X} = [0, 1]$
+		\item Приведен пример применения этого результата
+		\item Разработан алгоритм численного нахождения с-оптимальных планов в общем случае
+	\end{itemize}
+\end{frame}
+
+	\nobibliography{diploma}
 
 \end{document}
