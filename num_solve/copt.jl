@@ -93,10 +93,9 @@ function find_design(f, c, l_x, h_x)
         err = check(f, c, found_x, found_w, l_x, h_x)
 
         if err < 1e-5
-            println(err)
+            println(res)
             return found_x, found_w, res.minimum
         end
-        println("One more try err = ", err)
         counter += 1
     end
 end
@@ -137,8 +136,8 @@ function poly2(x)
 end
 
 function cycle()
-    for z in range(0, 1, length=20)
+    for z in range(0, 1, length=21)
         c = ForwardDiff.derivative.(poly2, z)
-        println("z = ", z, "    ", find_design(poly2,c, 0, 1))
+        println( z, ", ", find_design(poly2,c, 0, 1))
     end
 end
