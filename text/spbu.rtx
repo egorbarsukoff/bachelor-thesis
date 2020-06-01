@@ -30,18 +30,20 @@
 \fi
 
 \ifundeflength\firstskip{1.5cm}
-\ifundeflength\secondskip{3.5cm}
-\ifundeflength\thirdskip{3ex}
-\ifundeflength\fourthskip{2ex}
-\ifundeflength\fifthskip{4ex}
-\ifundeflength\sixthskip{2.5cm}
+\ifundeflength\secondskip{2.5cm}
+\ifundeflength\thirdskip{1.5ex}
+\ifundeflength\fourthskip{1.5ex}
+\ifundeflength\fifthskip{2cm}
+\ifundeflength\sixthskip{1.5cm}
 \ifundeflength\seventhskip{1ex}
+\ifundeflength\eightthskip{1ex}
 
 \setlength\fieldhshift{8.5cm}
 
-\def\titlefont{\Large\bfseries}
+\def\authorfont{\large\bfseries}
+\def\titlefont{\bfseries}
 \def\topiclabelfont{\large}
-\def\topicfont{\large\bfseries}
+\def\topicfont{\large\bfseries\scshape}
 
 \def\workname{\CYRR\cyra\cyrb\cyro\cyrt\cyra}
 
@@ -53,14 +55,15 @@
 \end{center}
 
 \vskip\firstskip
-\vskip\secondskip
 \begin{center}
+  \vskip\secondskip
+  {\authorfont\@author}
   \vskip\thirdskip
-  {\@author}
+  {\titlefont\@title}
   \vskip\fourthskip
   {\topicfont\@topic}
   \vskip\fifthskip
-  {\@title}
+  {\@group}
 \end{center}
 \normalfont
 \vskip\sixthskip
@@ -79,6 +82,7 @@
     \ifx\@sasnd\empty\else
     \vskip\seventhskip\diplomafield{sasnd}
     \fi
+    \vskip\eightthskip
     \ifx\@rev\empty\else
     \vskip\seventhskip\diplomafield{rev}
     \fi
